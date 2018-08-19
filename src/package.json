@@ -1,0 +1,16 @@
+{
+  "name": "cquencial",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.0.0-beta.36",
+    "bcrypt": "^1.0.3",
+    "bootstrap": "^3.3.7",
+    "bpmn-js": "^0.27.6",
+    "camunda-bpmn-moddle": "^2.0.0",
+    "meteor-node-stubs": "^0.3.2",
+    "simpl-schema": "^1.4.2"
+  }
+}

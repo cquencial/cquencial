@@ -1,0 +1,123 @@
+<template name="processes">
+
+	{{#unless hasProcesses}}
+		<div class="jumbotron">
+			<h2>No processes yet.</h2>
+		</div>
+	{{else}}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4>All Processes</h4>
+			</div>
+			<table class="table table-bordered table-no-vertical-border table-striped">
+				<thead>
+				<tr>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th>instanceId</th>
+					<th>actions</th>
+				</tr>
+				</thead>
+				<tbody>
+				{{#each processes}}
+					<tr>
+						<td>
+							{{#if isRunning this.instanceId}}
+								<span class="label label-primary"><i class="fa fa-fw fa-random"></i></span>
+							{{else}}
+								<i class="fa fa-fw fa-random text-muted"></i>
+							{{/if}}
+						</td>
+						<td>
+							<i class="fa fa-fw fa-check {{#if isComplete this.instanceId}}
+							text-success{{else}}text-muted{{/if}}"></i>
+						</td>
+						<td>
+							{{#if persistenceCount this.instanceId}}
+								<span class="label label-primary"><i
+										class="fa fa-fw fa-database"></i> {{persistenceCount
+										this.instanceId}}</span>
+							{{/if}}
+						</td>
+						<td>
+							{{#if historyCount this.instanceId}}
+								<span class="label label-primary"><i class="fa fa-fw fa-clock-o"></i> {{historyCount
+										this.instanceId}}</span>
+							{{/if}}
+						</td>
+						<td>
+							{{#if pendingCount this.instanceId}}
+								<span class="label"><i class="fa fa-fw fa-bolt"></i> {{pendingCount
+										this.instanceId}}</span>
+							{{/if}}
+						</td>
+						<td>{{this.instanceId}}</td>
+						<td class="text-right">
+							{{#unless isRunning this.instanceId}}
+								<button class="btn btn-sm btn-default resumeButton" data-id="{{this.instanceId}}"
+										title="resume">
+									<i class="fa fa-fw fa-undo"></i>
+								</button>
+							{{else}}
+								<button class="btn btn-sm btn-default stopButton" data-id="{{this.instanceId}}">
+									<i class="fa fa-fw fa-stop"></i>
+								</button>
+							{{/unless}}
+
+							{{> toggle target=this.instanceId active=(isTarget this.instanceId) icon="info" classes="set-target"}}
+
+							<button class="btn btn-sm btn-danger delete-persistent-entry"
+									data-target="{{this.instanceId}}">
+								<i class="fa fa-fw fa-trash"></i>
+							</button>
+						</td>
+					</tr>
+
+					{{#if isTarget this.instanceId }}
+						<tr>
+							<td colspan="7">
+								<ul class="nav nav-tabs">
+									<li role="presentation" class="{{#if tab 'preview'}}active{{/if}}">
+										<a href class="tab-target" data-target="preview">Preview</a>
+									</li>
+									<li role="presentation" class="{{#if tab 'persistence'}}active{{/if}}">
+										<a href class="tab-target" data-target="persistence">Persistence</a>
+									</li>
+									<li role="presentation" class="{{#if tab 'history'}}active{{/if}}">
+										<a href class="tab-target" data-target="history">History</a>
+									</li>
+									<li role="presentation" class="{{#if tab 'pending'}}active{{/if}}">
+										<a href class="tab-target" data-target="pending">Pending Activities</a>
+									</li>
+								</ul>
+								<br>
+
+								{{#if tab 'preview'}}
+									{{> preview instanceId=this.instanceId isRunning=(isRunning this.instanceId) }}
+								{{/if}}
+
+								{{#if tab 'persistence'}}
+									{{> persistence instanceId=this.instanceId isRunning=(isRunning this.instanceId) }}
+								{{/if}}
+
+								{{#if tab 'history'}}
+									{{> history instanceId=this.instanceId isRunning=(isRunning this.instanceId) }}
+								{{/if}}
+
+								{{#if tab 'pending'}}
+									{{> pending instanceId=this.instanceId isRunning=(isRunning this.instanceId) }}
+								{{/if}}
+							</td>
+						</tr>
+					{{/if}}
+
+				{{/each}}
+				</tbody>
+			</table>
+		</div>
+
+	{{/unless}}
+</template>

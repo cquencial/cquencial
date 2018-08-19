@@ -1,0 +1,46 @@
+<template name="history">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4>History for {{instanceId}}</h4>
+		</div>
+
+		<table class="table table-bordered table-striped">
+			<thead>
+			<tr>
+				<th>_id</th>
+				<th>instanceId</th>
+				<th>createdAt</th>
+				<th>createdBy</th>
+				<th>eventName</th>
+				<th>elementId</th>
+				<th>processId</th>
+				<th>state</th>
+				<th>notes</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{#each instances instanceId}}
+				<tr>
+					<td>{{this._id}}</td>
+					<td>{{this.instanceId}}</td>
+					<td>{{this.createdAt}}</td>
+					<td>{{this.createdBy}}</td>
+					<td>{{this.eventName}}</td>
+					<td>{{this.elementId}}</td>
+					<td>{{this.processId}}</td>
+					<td>{{this.state}}</td>
+					<td>
+						{{#if isUnended this.instanceId this.elementId this.eventName}}
+							<button class="btn btn-info {{#unless ../isRunning}}disabled{{else}}continue{{/unless}}"
+									data-instance="{{this.instanceId}}"
+									data-target="{{this.elementId}}">
+								Continue
+							</button>
+						{{/if}}
+					</td>
+				</tr>
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+</template>

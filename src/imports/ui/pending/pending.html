@@ -1,0 +1,52 @@
+<template name="pending">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4>Pending Activities</h4>
+		</div>
+		<table class="table table-bordered  table-striped">
+			<thead>
+			<tr>
+				<th>id</th>
+				<th>type</th>
+				<th>form</th>
+				<th>action</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{#each entries}}
+				<tr>
+					<td>{{this.id}}</td>
+					<td>{{this.type}}</td>
+					<td>
+						{{#if this.form}}
+							<button class="btn btn-default form-button" title="load form" data-target="{{this.id}}">
+								<i class="fa fa-file-text-o"></i>
+							</button>
+						{{/if}}
+					</td>
+					<td>
+						<button class="btn btn-default {{#if ../isRunning}}signal-button{{else}}disabled{{/if}}"
+								data-instance="{{../instanceId}}"
+								data-target="{{this.id}}"
+								title="signal">
+							<i class="fa fa-fw fa-bolt"></i>
+						</button>
+					</td>
+				</tr>
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+	{{#modal id='formModal'}}
+		{{#mheader dismiss=true}}{{/mheader}}
+		{{#mbody}}
+			{{#if formSchemaReady}}
+				{{> quickForm id="taskForm" schema=formSchema type="normal"}}
+				{{else}}
+				<div class="text-center">
+				<i class="fa fa-spinner fa-pulse"></i>
+				</div>
+			{{/if}}
+		{{/mbody}}
+	{{/modal}}
+</template>

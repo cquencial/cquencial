@@ -2,7 +2,9 @@
   "name": "cquencial",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor run",
+    "lint": "standard",
+    "lint-fix": "standard --fix"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.36",
@@ -12,5 +14,8 @@
     "camunda-bpmn-moddle": "^2.0.0",
     "meteor-node-stubs": "^0.3.2",
     "simpl-schema": "^1.4.2"
+  },
+  "devDependencies": {
+    "standard": "^11.0.1"
   }
 }

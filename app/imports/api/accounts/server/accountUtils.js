@@ -1,4 +1,5 @@
-import {Meteor} from 'meteor/meteor'
+/* global Roles */
+import { Meteor } from 'meteor/meteor'
 
 export const hasUsers = () => Meteor.users.find().count() > 0
 

@@ -12,23 +12,27 @@
 				</a>
 			</div>
 			<ul class="nav navbar-nav">
-				<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						<i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
-						<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						{{#each notifications}}
-							<li class="text-right">
-								<a href="#">{{shortDate this.createdAt}} - {{shortMessage this.message}}</a>
-							</li>
-						{{/each}}
-					</ul>
-				</li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
 				<li>
 					{{>loginButtons}}
 				</li>
+				{{#if currentUser}}
+					<li class="dropdown">
+						{{#with notifications}}
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+								<i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
+								<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								{{#each this}}
+									<li class="text-right">
+										<a href="#">{{shortDate this.createdAt}} - {{shortMessage this.message}}</a>
+									</li>
+								{{/each}}
+							</ul>
+						{{else}}
+							<i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
+						{{/with}}
+					</li>
+				{{/if}}
 			</ul>
 		</div>
 	</nav>
@@ -69,7 +73,7 @@
 		{{#if showTasklist}}
 			{{> tasklist }}
 			<hr>
-	 	{{/if}}
+		{{/if}}
 
 		{{#if createNew}}
 			{{>form onCreated=onCreated}}

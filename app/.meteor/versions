@@ -5,7 +5,6 @@ accounts-ui-unstyled@1.4.0
 alanning:roles@1.2.16
 aldeed:autoform@6.3.0
 aldeed:collection2@3.0.0
-aldeed:template-extension@4.0.0
 allow-deny@1.1.0
 autoupdate@1.4.0
 babel-compiler@7.0.5
@@ -34,7 +33,7 @@ ddp-server@2.1.2
 deps@1.0.12
 diff-sequence@1.1.0
 dynamic-import@0.3.0
-ecmascript@0.10.5
+ecmascript@0.10.6
 ecmascript-runtime@0.5.0
 ecmascript-runtime-client@0.6.2
 ecmascript-runtime-server@0.5.0
@@ -48,7 +47,7 @@ html-tools@1.0.11
 htmljs@1.0.11
 http@1.4.0
 id-map@1.1.0
-jkuester:autoform-bpmn@0.1.5
+jkuester:autoform-bpmn@0.1.6
 jquery@1.11.11
 lai:collection-extensions@0.2.1_1
 launch-screen@1.1.1

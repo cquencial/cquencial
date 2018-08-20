@@ -57,7 +57,7 @@ ostrio:flow-router-extra
 # UI / FORMS
 # ======================================= #
 aldeed:autoform
-jkuester:autoform-bpmn
+jkuester:autoform-bpmn@0.1.6
 
 # ======================================= #
 # UI / MISC

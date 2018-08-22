@@ -11,7 +11,9 @@ const fs = require('fs')
 Bpmn.persistence.on()
 Bpmn.instances.on()
 Bpmn.history.on()
-Bpmn.tasklist.on()
+
+// keep off for now
+Bpmn.tasklist.off()
 
 Meteor.publish(null, () => {
   Bpmn.processes.collection.find()

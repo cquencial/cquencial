@@ -35,8 +35,9 @@ Template.processes.helpers({
   isRunning (instanceId) {
     return Bpmn.instances.collection.findOne({ instanceId })
   },
-  isComplete (instanceId) {
-    return false
+  isComplete (instanceId, processId) {
+    console.log(instanceId, processId)
+    return Bpmn.history.collection.findOne({instanceId, elementId: processId, eventName: 'end'})
   },
   hasTarget () {
     return !!Template.instance().state.get('target')
@@ -57,7 +58,7 @@ Template.processes.helpers({
     return Bpmn.persistence.collection.find({ instanceId }).count()
   },
   pendingCount (instanceId) {
-    return Bpmn.history.collection.find({ instanceId }).count()
+    return 0
   }
 })
 

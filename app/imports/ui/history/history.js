@@ -1,4 +1,4 @@
-import {Bpmn} from 'meteor/cquencial:bpmn-engine'
+import { Bpmn } from 'meteor/cquencial:bpmn-engine'
 
 import './history.html'
 
@@ -16,6 +16,15 @@ Template.history.helpers({
       elementId,
       eventName: 'end'
     })
+  },
+  type (entry) {
+    if (entry.eventName === 'resume' || entry.eventName === 'stop') return 'warning'
+    if (entry.eventName === 'wait') return 'info'
+
+    const processContext = entry.elementId === entry.processId
+    if (processContext && (entry.eventName === 'start' || entry.eventName === 'end')) {
+      return 'success'
+    }
   }
 })
 

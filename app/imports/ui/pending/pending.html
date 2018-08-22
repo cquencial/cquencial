@@ -3,6 +3,7 @@
 		<div class="panel-heading">
 			<h4>Pending Activities</h4>
 		</div>
+        {{#with entries}}
 		<table class="table table-bordered  table-striped">
 			<thead>
 			<tr>
@@ -13,7 +14,7 @@
 			</tr>
 			</thead>
 			<tbody>
-			{{#each entries}}
+			{{#each this}}
 				<tr>
 					<td>{{this.id}}</td>
 					<td>{{this.type}}</td>
@@ -36,6 +37,11 @@
 			{{/each}}
 			</tbody>
 		</table>
+        {{else}}
+            <div class="jumbotron">
+                No pending activities
+            </div>
+        {{/with}}
 	</div>
 	{{#modal id='formModal'}}
 		{{#mheader dismiss=true}}{{/mheader}}

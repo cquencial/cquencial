@@ -8,7 +8,6 @@
 			<thead>
 			<tr>
 				<th>_id</th>
-				<th>instanceId</th>
 				<th>createdAt</th>
 				<th>createdBy</th>
 				<th>eventName</th>
@@ -20,10 +19,9 @@
 			</thead>
 			<tbody>
 			{{#each instances instanceId}}
-				<tr>
+				<tr class="{{type this}}">
 					<td>{{this._id}}</td>
-					<td>{{this.instanceId}}</td>
-					<td>{{this.createdAt}}</td>
+					<td>{{toDate this.createdAt}}</td>
 					<td>{{this.createdBy}}</td>
 					<td>{{this.eventName}}</td>
 					<td>{{this.elementId}}</td>
@@ -31,10 +29,10 @@
 					<td>{{this.state}}</td>
 					<td>
 						{{#if isUnended this.instanceId this.elementId this.eventName}}
-							<button class="btn btn-info {{#unless ../isRunning}}disabled{{else}}continue{{/unless}}"
+							<button class="btn {{#unless ../isRunning}}disabled{{else}}continue{{/unless}}"
 									data-instance="{{this.instanceId}}"
 									data-target="{{this.elementId}}">
-								Continue
+								<i class="fa fa-bolt"></i> Continue
 							</button>
 						{{/if}}
 					</td>

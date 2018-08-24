@@ -11,11 +11,9 @@
 					CQUENCIAL
 				</a>
 			</div>
+            {{#if currentUser}}
 			<ul class="nav navbar-nav">
-				<li>
-					{{>loginButtons}}
-				</li>
-				{{#if currentUser}}
+
 					<li class="dropdown">
 						{{#with notifications}}
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -32,14 +30,23 @@
 							<i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
 						{{/with}}
 					</li>
-				{{/if}}
 			</ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/logout">
+                            <i class="fa fa-sign-out"></i>
+                        </a>
+                    </li>
+                </ul>
+             {{/if}}
 		</div>
 	</nav>
 
 	{{#unless currentUser}}
 		<div class="jumbotron">
 			<h4 class="text-center">Please sign in to manage bpmn processes</h4>
+            {{> login}}
 		</div>
 	{{else}}
 		<div>

@@ -9,6 +9,8 @@ import '../imports/ui/processes/processes'
 import '../imports/ui/form/form'
 import '../imports/ui/tasklist/tasklist'
 
+import '../imports/ui/components/login/login'
+
 import './main.html'
 import { Notifications } from '../imports/notifications/Notifications'
 
@@ -19,6 +21,11 @@ Template.registerHelper('toDate', function (date) {
 Template.registerHelper('print', function (obj) {
   return JSON.stringify(obj)
 })
+
+Template.registerHelper('log', function (obj) {
+  return console.log(obj)
+})
+
 
 Template.body.onCreated(function () {
   const instance = this

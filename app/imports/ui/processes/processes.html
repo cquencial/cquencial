@@ -13,7 +13,7 @@
                 <thead>
                 <tr>
                     <th class="text-center">Status</th>
-                    <th class="text-center">Perstent Saves</th>
+                    <th class="text-center">Persistent Saves</th>
                     <th class="text-center">History Saves</th>
                     <th class="text-center">Pending Activities</th>
                     <th class="text-center">instanceId</th>
@@ -22,18 +22,14 @@
                 </thead>
                 <tbody>
                 {{#each processes}}
+                {{log this}}
                     <tr>
                         <td class="text-center">
-                            {{#if isRunning this.instanceId}}
-                                <span class="label label-primary">
-                                    <i class="fa fa-fw fa-random"></i> running
+                            {{#with processState this.state}}
+                                <span class="text-{{color}}">
+                                    <i class="fa fa-fw fa-{{icon}}"></i> {{label}}
                                 </span>
-                            {{/if}}
-                            {{#if isComplete this.instanceId this.processId}}
-                                <span class="label label-primary">
-                                    <i class="fa fa-fw fa-check"></i> completed
-                                </span>
-                            {{/if}}
+                            {{/with}}
                         </td>
                         <td class="text-right">
                             {{persistenceCount this.instanceId}}
@@ -45,7 +41,7 @@
                             {{#if pendingCount this.instanceId}}
                                 <span class="label"><i class="fa fa-fw fa-bolt"></i> {{pendingCount
                                         this.instanceId}}</span>
-                                {{else}}
+                            {{else}}
                                 <span>Tasklist addon required</span>
                             {{/if}}
                         </td>
@@ -113,6 +109,5 @@
                 </tbody>
             </table>
         </div>
-
     {{/unless}}
 </template>

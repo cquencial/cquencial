@@ -1,3 +1,4 @@
+import { Template } from 'meteor/templating'
 import { ReactiveDict } from 'meteor/reactive-dict'
 import { Bpmn } from 'meteor/cquencial:bpmn-engine'
 
@@ -29,36 +30,55 @@ Template.processes.helpers({
     return Bpmn.processes.collection.find({}).count() > 0
   },
   processes () {
-    return Bpmn.processes.collection.find({})
+    const postFilter = Template.getState('postFilter')
+    return Bpmn.processes.collection.find(postFilter || {})
   },
 
   isRunning (instanceId) {
-    return Bpmn.instances.collection.findOne({ instanceId })
+    return Bpmn.instances.collection.findOne({instanceId})
   },
   isComplete (instanceId, processId) {
     console.log(instanceId, processId)
     return Bpmn.history.collection.findOne({instanceId, elementId: processId, eventName: 'end'})
   },
   hasTarget () {
-    return !!Template.instance().state.get('target')
+    return !!Template.getState('target')
   },
   getTarget () {
-    return Template.instance().state.get('target')
+    return Template.getState('target')
   },
   isTarget (instanceId) {
-    return Template.instance().state.get('target') === instanceId
+    return Template.getState('target') === instanceId
   },
   tab (name) {
-    return Template.instance().state.get('tab') === name
+    return Template.getState('tab') === name
   },
   historyCount (instanceId) {
-    return Bpmn.history.collection.find({ instanceId }).count()
+    return Bpmn.history.collection.find({instanceId}).count()
   },
   persistenceCount (instanceId) {
-    return Bpmn.persistence.collection.find({ instanceId }).count()
+    return Bpmn.persistence.collection.find({instanceId}).count()
   },
   pendingCount (instanceId) {
     return 0
+  },
+  processState (state) {
+    switch (state) {
+      case Bpmn.States.running:
+        return {icon: 'play', color: 'primary', label: 'Running'}
+      case Bpmn.States.waiting:
+        return {icon: 'bolt', color: 'info', label: 'Waiting'}
+      case Bpmn.States.complete:
+        return {icon: 'check', color: 'success', label: 'Complete'}
+      case Bpmn.States.stopped:
+        return {icon: 'stop', color: 'default', label: 'Stopped'}
+      case Bpmn.States.cancelled:
+        return {icon: 'times', color: 'warning', label: 'Cancelled'}
+      case Bpmn.States.error:
+        return {icon: 'excalamtion-triangle', color: 'danger', label: 'Error'}
+      default:
+        return {icon: 'question', color: 'default', label: 'Unknown'}
+    }
   }
 })
 
@@ -67,12 +87,12 @@ Template.processes.events({
   'click .resumeButton' (event) {
     event.preventDefault()
     const instanceId = $(event.currentTarget).attr('data-id')
-    Meteor.call('resumeProcess', { instanceId })
+    Meteor.call('resumeProcess', {instanceId})
   },
   'click .stopButton' (event) {
     event.preventDefault()
     const instanceId = $(event.currentTarget).attr('data-id')
-    Meteor.call('stopInstance', { instanceId })
+    Meteor.call('stopInstance', {instanceId})
   },
 
   'click .set-target' (event, templateInstance) {
@@ -99,6 +119,6 @@ Template.processes.events({
   'click .delete-persistent-entry' (event) {
     event.preventDefault()
     const instanceId = $(event.currentTarget).attr('data-target')
-    Meteor.call('deletePersistentEntry', { instanceId })
+    Meteor.call('deletePersistentEntry', {instanceId})
   }
 })

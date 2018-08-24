@@ -13,26 +13,38 @@
 			</div>
             {{#if currentUser}}
 			<ul class="nav navbar-nav">
-
-					<li class="dropdown">
-						{{#with notifications}}
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-								<i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
-								<span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								{{#each this}}
-									<li class="text-right">
-										<a href="#">{{shortDate this.createdAt}} - {{shortMessage this.message}}</a>
-									</li>
-								{{/each}}
-							</ul>
-						{{else}}
-							<i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
-						{{/with}}
-					</li>
+                <li>
+                    <a href>Processes</a>
+                </li>
+                <li>
+                    <a href>Tasks</a>
+                </li>
 			</ul>
 
                 <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        {{#with notifications}}
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
+                                <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                {{#each this}}
+                                    <li class="text-right">
+                                        <a href="#">{{shortDate this.createdAt}} - {{shortMessage this.message}}</a>
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        {{else}}
+                            <a href>
+                            <i class="fa fa-fw fa-bell"></i> <span class="badge">0</span>
+                            </a>
+                        {{/with}}
+                    </li>
+                    <li>
+                        <a href="/settings">
+                            <i class="fa fa-fw fa-wrench"></i>
+                        </a>
+                    </li>
                     <li>
                         <a href="/logout">
                             <i class="fa fa-sign-out"></i>

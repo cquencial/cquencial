@@ -49,7 +49,8 @@ Template.body.helpers({
     return Notifications.find().count()
   },
   notifications () {
-    return Notifications.find({userId: Meteor.userId()}, {sort: {createdAt: -1}})
+    const notifications = Notifications.find({userId: Meteor.userId()}, {sort: {createdAt: -1}})
+    return notifications.count() > 0 ? notifications : null
   },
   shortDate (date) {
     const dt = new Date(date)

@@ -42,7 +42,7 @@ alanning:roles
 # ======================================= #
 # CQUENCIAL PACKAGES
 # ======================================= #
-cquencial:bpmn-engine
+cquencial:bpmn-engine@0.1.2
 cquencial:bpmn-persistence
 cquencial:bpmn-instances
 cquencial:bpmn-history
@@ -60,8 +60,13 @@ aldeed:autoform
 jkuester:autoform-bpmn@0.1.6
 
 # ======================================= #
-# UI / MISC
+# UI / BLAZE / TEMPLATES
+# ======================================= #
+jkuester:template-states
+reactive-dict
+
+# ======================================= #
+# UI / STYLE
 # ======================================= #
 less
 fortawesome:fontawesome
-reactive-dict

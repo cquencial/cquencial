@@ -2,11 +2,12 @@ import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import { Random } from 'meteor/random'
 import { Bpmn } from 'meteor/cquencial:bpmn-engine'
-import { ServiceContext } from '../imports/context/ServiceContext'
 import camundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda'
-
+import { ServiceContext } from '../imports/context/ServiceContext'
 const EventEmitter = require('events').EventEmitter
-const fs = require('fs')
+
+// IMPORT STARTUP FILES
+import '../imports/startup/server/'
 
 Bpmn.persistence.on()
 Bpmn.instances.on()
@@ -15,21 +16,7 @@ Bpmn.history.on()
 // keep off for now
 Bpmn.tasklist.off()
 
-Meteor.publish(null, () => {
-  Bpmn.processes.collection.find()
-})
 
-Meteor.publish(null, () => {
-  return Bpmn.persistence.collection.find()
-})
-
-Meteor.publish(null, () => {
-  return Bpmn.instances.collection.find()
-})
-
-Meteor.publish(null, () => {
-  return Bpmn.history.collection.find()
-})
 
 const processXml = `
 <?xml version="1.0" encoding="UTF-8"?>
@@ -145,7 +132,9 @@ Meteor.methods({
 
   getPending ({instanceId}) {
     check(instanceId, String)
-    if (!Bpmn.instances.has(instanceId)) { throw new Error('no instance') }
+    if (!Bpmn.instances.has(instanceId)) {
+      throw new Error('no instance')
+    }
 
     const instance = Bpmn.instances.get(instanceId)
     return instance.getPendingActivities()

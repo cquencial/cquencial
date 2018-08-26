@@ -9,3 +9,18 @@ Cquencial.debug = function debug(value) {
   check(value, Boolean)
   internal._debug = value
 }
+
+
+const to = {}
+
+to.publicationName = function toPublicationName (value) {
+  check(value, String)
+  return `cquencial.publications.${value}`
+}
+
+to.methodName = function toMethodName (value) {
+  check(value, String)
+  return `cquencial.methods.${value}`
+}
+
+Cquencial.to = to

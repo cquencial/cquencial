@@ -24,7 +24,7 @@ Template.login.helpers({
 })
 
 Template.login.events({
-  'submit #loginForm'(event) {
+  'submit #loginForm' (event) {
     event.preventDefault()
 
     const {insertDoc} = AutoForm.getFormValues('loginForm')

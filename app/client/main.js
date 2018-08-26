@@ -7,6 +7,10 @@ import {Tracker} from 'meteor/tracker'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
 
+// STARTUP IMPORTS
+import '../imports/startup/both'
+import '../imports/startup/client'
+
 import '../imports/ui/processes/processes'
 import '../imports/ui/form/form'
 import '../imports/ui/tasklist/tasklist'
@@ -14,14 +18,15 @@ import '../imports/ui/tasklist/tasklist'
 import '../imports/ui/components/login/login'
 
 import './main.html'
-import { Notifications } from '../imports/notifications/Notifications'
+import { Notifications } from '../imports/api/notifications/Notifications'
+import { Cquencial } from '../imports/api/cquencial/Cquencial'
 
 
 const extensions = Bpmn.extensions.getAll()
 console.log(extensions)
 extensions.forEach(extension => {
   Tracker.autorun(() => {
-    const pubname = `publications.${extension.ref.ns}`
+    const pubname = Cquencial.to.publicationName(extension.ref.ns)
     const handle = Meteor.subscribe(pubname)
     if (handle.ready()) {
       console.info(`ready [${pubname}]`)
@@ -30,17 +35,7 @@ extensions.forEach(extension => {
   })
 })
 
-Template.registerHelper('toDate', function (date) {
-  return new Date(date).toLocaleString()
-})
 
-Template.registerHelper('print', function (obj) {
-  return JSON.stringify(obj)
-})
-
-Template.registerHelper('log', function (obj) {
-  return console.log(obj)
-})
 
 Template.body.onCreated(function () {
   const instance = this

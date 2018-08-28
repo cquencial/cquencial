@@ -24,3 +24,13 @@ to.methodName = function toMethodName (value) {
 }
 
 Cquencial.to = to
+
+
+const methods = {}
+
+methods.setupRequired = {
+  name: 'cquencial.methods.setupRequired',
+  schema: null,
+}
+
+Cquencial.methods = methods

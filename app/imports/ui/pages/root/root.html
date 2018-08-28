@@ -1,0 +1,40 @@
+<template name="root">
+	<div>
+		<button class="btn btn-sm btn-danger pull-right" id="delete-all-button">
+			<i class="fa fa-fw fa-trash"></i> Delete All
+		</button>
+		
+		<button class="btn btn-sm btn-success" id="createProcess">
+			<i class="fa fa-fw fa-plus"></i> New
+		</button>
+		<button class="btn btn-sm btn-default" id="restoreAll">
+			<i class="fa fa-fw fa-play"></i> Resume All
+		</button>
+		<button class="btn btn-sm btn-default" id="restoreAll">
+			<i class="fa fa-fw fa-stop"></i> Stop All
+		</button>
+		
+		{{#if showTasklist}}
+		<button class="btn btn-sm btn-info" id="tasklistToggleButton">
+			<i class="fa fa-fw fa-list"></i> Hide Tasklist
+		</button>
+		{{else}}
+		<button class="btn btn-sm btn-default" id="tasklistToggleButton">
+			<i class="fa fa-fw fa-list"></i> Show Tasklist
+		</button>
+		{{/if}}
+	
+	</div>
+	<hr>
+	
+	{{#if showTasklist}}
+	{{> tasklist }}
+	<hr>
+	{{/if}}
+	
+	{{#if createNew}}
+	{{>form onCreated=onCreated}}
+	{{/if}}
+	
+	{{> processes instanceId=instanceId}}
+</template>

@@ -2,103 +2,60 @@
 	<title>cquencial</title>
 </head>
 
-<body>
-<div class="container-fluid">
-	<nav class="navbar navbar-inverse navbar-static-top">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#">
-					CQUENCIAL
-				</a>
+<template name="main">
+	<div class="container-fluid">
+		<nav class="navbar navbar-inverse navbar-static-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">
+						CQUENCIAL
+					</a>
+				</div>
+				{{#if currentUser}}
+				<ul class="nav navbar-nav">
+					<li>
+						<a href>Processes</a>
+					</li>
+					<li>
+						<a href>Tasks</a>
+					</li>
+				</ul>
+				
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						{{#with notifications}}
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
+							<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							{{#each this}}
+							<li class="text-right">
+								<a href="#">{{shortDate this.createdAt}} - {{shortMessage this.message}}</a>
+							</li>
+							{{/each}}
+						</ul>
+						{{else}}
+						<a href>
+							<i class="fa fa-fw fa-bell"></i> <span class="badge">0</span>
+						</a>
+						{{/with}}
+					</li>
+					<li>
+						<a href="/settings">
+							<i class="fa fa-fw fa-wrench"></i>
+						</a>
+					</li>
+					<li>
+						<a href="/logout">
+							<i class="fa fa-sign-out"></i>
+						</a>
+					</li>
+				</ul>
+				{{/if}}
 			</div>
-            {{#if currentUser}}
-			<ul class="nav navbar-nav">
-                <li>
-                    <a href>Processes</a>
-                </li>
-                <li>
-                    <a href>Tasks</a>
-                </li>
-			</ul>
-
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        {{#with notifications}}
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
-                                <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                {{#each this}}
-                                    <li class="text-right">
-                                        <a href="#">{{shortDate this.createdAt}} - {{shortMessage this.message}}</a>
-                                    </li>
-                                {{/each}}
-                            </ul>
-                        {{else}}
-                            <a href>
-                            <i class="fa fa-fw fa-bell"></i> <span class="badge">0</span>
-                            </a>
-                        {{/with}}
-                    </li>
-                    <li>
-                        <a href="/settings">
-                            <i class="fa fa-fw fa-wrench"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/logout">
-                            <i class="fa fa-sign-out"></i>
-                        </a>
-                    </li>
-                </ul>
-             {{/if}}
+		</nav>
+		<div class="content-container">
+		{{> yield}}
 		</div>
-	</nav>
-
-	{{#unless currentUser}}
-		<div class="jumbotron">
-			<h4 class="text-center">Please sign in to manage bpmn processes</h4>
-            {{> login}}
-		</div>
-	{{else}}
-		<div>
-			<button class="btn btn-sm btn-danger pull-right" id="delete-all-button">
-				<i class="fa fa-fw fa-trash"></i> Delete All
-			</button>
-
-			<button class="btn btn-sm btn-success" id="createProcess">
-				<i class="fa fa-fw fa-plus"></i> New
-			</button>
-			<button class="btn btn-sm btn-default" id="restoreAll">
-				<i class="fa fa-fw fa-play"></i> Resume All
-			</button>
-			<button class="btn btn-sm btn-default" id="restoreAll">
-				<i class="fa fa-fw fa-stop"></i> Stop All
-			</button>
-
-			{{#if showTasklist}}
-				<button class="btn btn-sm btn-info" id="tasklistToggleButton">
-					<i class="fa fa-fw fa-list"></i> Hide Tasklist
-				</button>
-			{{else}}
-				<button class="btn btn-sm btn-default" id="tasklistToggleButton">
-					<i class="fa fa-fw fa-list"></i> Show Tasklist
-				</button>
-			{{/if}}
-
-		</div>
-		<hr>
-
-		{{#if showTasklist}}
-			{{> tasklist }}
-			<hr>
-		{{/if}}
-
-		{{#if createNew}}
-			{{>form onCreated=onCreated}}
-		{{/if}}
-
-		{{> processes instanceId=instanceId}}
-	{{/unless}}
-</div>
-</body>
+	</div>
+</template>

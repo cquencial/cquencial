@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { Template } from 'meteor/templating'
+import { ReactiveDict } from 'meteor/reactive-dict'
 import './root.html'
 
 Template.root.onCreated(function () {
@@ -9,23 +10,16 @@ Template.root.onCreated(function () {
 
 Template.root.helpers({
   instanceId () {
-    return Session.get('instanceId')
+    return Template.getState('instanceId')
   },
   createNew () {
-    return Template.instance().state.get('createNew')
+    return Template.getState('createNew')
   },
   onCreated () {
     return function onCreated (source) {
       Meteor.call('startProcess', {source})
       this.state.set('createNew', false)
     }.bind(Template.instance())
-  },
-  notificationsCount () {
-    return Notifications.find().count()
-  },
-  notifications () {
-    const notifications = Notifications.find({userId: Meteor.userId()}, {sort: {createdAt: -1}})
-    return notifications.count() > 0 ? notifications : null
   },
   shortDate (date) {
     const dt = new Date(date)
@@ -48,8 +42,8 @@ Template.root.events({
   },
   'click .history' (event, templateInstance) {
     event.preventDefault()
-    const instanceId = $(event.currentTarget).attr('data-instance')
-    Session.set('instanceId', instanceId)
+    const instanceId = templateInstance.$(event.currentTarget).attr('data-instance')
+    templateInstance.state.set('instanceId', instanceId)
   },
 
   'click #delete-all-button' (event) {

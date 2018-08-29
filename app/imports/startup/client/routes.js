@@ -1,15 +1,19 @@
 import { Meteor } from 'meteor/meteor'
 import { Cquencial } from '../../api/cquencial/Cquencial'
 import { Routes } from '../../api/routes/Routes'
+import { Navigation } from '../../api/navigation/Navigation'
 
-function login () {
-  if (!Meteor.user() && !Meteor.userId()) {
+const loggedIn = () =>  Meteor.user() || Meteor.userId()
+const loggedOut = () => !Meteor.user() && !Meteor.userId()
+
+function toLogin () {
+  if (loggedOut()) {
     Routes.to.login.go({}, {redirect: global.encodeURIComponent(Routes.location())})
   }
 }
 
-function loggedIn () {
-  if (Meteor.user() || Meteor.userId()) {
+function toRoot () {
+  if (loggedIn()) {
     Routes.to.root.go()
   }
 }
@@ -26,16 +30,19 @@ export const allRoutes = [
     template () {
       return import('/imports/ui/pages/pageNotFound/pageNotFound.js')
     },
-    enter: [login]
+    enter: [toLogin]
   },
   {
     name: 'root',
-    label: 'Welcome',
+    label: 'CQUENCIAL',
     path: '/',
     template () {
       return import('/imports/ui/pages/root/root.js')
     },
-    enter: [login]
+    enter: [toLogin],
+    navigation: () => true,
+    target: Navigation.home,
+    icon: 'home'
   },
   {
     name: 'login',
@@ -44,19 +51,47 @@ export const allRoutes = [
     template () {
       return import('/imports/ui/pages/root/root.js')
     },
-    enter: [loggedIn]
+    enter: [toRoot],
+    navigation: loggedOut,
+    target: Navigation.right,
+  },
+  {
+    name: 'logout',
+    label: 'Logout',
+    path: '/logout',
+    template () {
+      return import('/imports/ui/pages/logout/logout.js')
+    },
+    enter: [toLogin],
+    navigation: loggedIn,
+    target: Navigation.right,
   },
   {
     name: 'setup',
     label: 'Setup Cquencial',
     path: '/setup',
-    template() {
+    template () {
       return import('/imports/ui/pages/setup/setup.js')
-    }
+    },
+  },
+  {
+    name: 'settings',
+    label: 'Settings',
+    path: '/settings',
+    template() {
+      return import('/imports/ui/pages/settings/settings.js')
+    },
+    navigation: loggedIn,
+    icon: 'wrench',
+    target: Navigation.right,
   }
 ]
 
+
 allRoutes.forEach(route => Routes.define(route.name, route))
+
+const navRoutes = allRoutes.filter(route => !!route.navigation)
+navRoutes.forEach(navRoute => Navigation.register(navRoute.target, navRoute))
 
 Meteor.startup(() => {
   Meteor.call(Cquencial.methods.setupRequired.name, (err, res) => {

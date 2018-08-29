@@ -1,3 +1,59 @@
 <template name="nav">
+	<nav class="navbar navbar-inverse navbar-static-top">
+		<div class="container-fluid">
+			{{#with homeEntries}}
+			<div class="navbar-header">
+				{{#each this}}
+				<a class="navbar-brand" href="{{this.path}}">
+					{{this.label}}
+				</a>
+				{{/each}}
+			</div>
+			{{/with}}
+			{{#if currentUser}}
+			{{#with leftEntries}}
+			{{> navRoute route=this}}
+			{{/with}}
+			
+			{{#with rightEntries}}
+			<ul class="nav navbar-nav navbar-right">
+				<!--
+				<li class="dropdown">
+					{{#with notifications}}
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+						<i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
+						<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						{{#each this}}
+						<li class="text-right">
+							<a href="#">{{shortDate this.createdAt}} - {{shortMessage this.message}}</a>
+						</li>
+						{{/each}}
+					</ul>
+					{{else}}
+					<a href>
+						<i class="fa fa-fw fa-bell"></i> <span class="badge">0</span>
+					</a>
+					{{/with}}
+				</li>
+				-->
+				{{#each this}}
+				{{#if showRoute this}}
+				{{> navRoute route=this}}
+				{{/if}}
+				{{/each}}
+			</ul>
+			{{/with}}
+			{{/if}}
+		</div>
+	</nav>
+</template>
 
+<template name="navRoute">
+	<li class="{{#if isActive}}active{{/if}}">
+		<a href="{{route.path}}" name="{{route.name}}" class="route-{{route.name}}">
+			{{#if route.icon}}<i class="fa fa-fw fa-{{route.icon}}"></i>{{/if}}
+			<span>{{route.label}}</span>
+		</a>
+	</li>
 </template>

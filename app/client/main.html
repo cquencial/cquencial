@@ -4,56 +4,7 @@
 
 <template name="main">
 	<div class="container-fluid">
-		<nav class="navbar navbar-inverse navbar-static-top">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="#">
-						CQUENCIAL
-					</a>
-				</div>
-				{{#if currentUser}}
-				<ul class="nav navbar-nav">
-					<li>
-						<a href>Processes</a>
-					</li>
-					<li>
-						<a href>Tasks</a>
-					</li>
-				</ul>
-				
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						{{#with notifications}}
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<i class="fa fa-fw fa-bell"></i> <span class="badge">{{notificationsCount}}</span>
-							<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							{{#each this}}
-							<li class="text-right">
-								<a href="#">{{shortDate this.createdAt}} - {{shortMessage this.message}}</a>
-							</li>
-							{{/each}}
-						</ul>
-						{{else}}
-						<a href>
-							<i class="fa fa-fw fa-bell"></i> <span class="badge">0</span>
-						</a>
-						{{/with}}
-					</li>
-					<li>
-						<a href="/settings">
-							<i class="fa fa-fw fa-wrench"></i>
-						</a>
-					</li>
-					<li>
-						<a href="/logout">
-							<i class="fa fa-sign-out"></i>
-						</a>
-					</li>
-				</ul>
-				{{/if}}
-			</div>
-		</nav>
+		{{> nav}}
 		<div class="content-container">
 		{{> yield}}
 		</div>

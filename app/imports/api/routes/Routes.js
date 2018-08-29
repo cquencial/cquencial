@@ -121,3 +121,19 @@ Routes.to = new Proxy(internal, {
 Routes.location = function location () {
   return FlowRouter.current().path
 }
+
+Routes.go = function go (fullpath) {
+  FlowRouter.go(fullpath)
+}
+
+Routes.queryParams = function queryParams () {
+  return FlowRouter.current().queryParams
+}
+
+Routes.queryParam = function (key) {
+  const methoda = FlowRouter.getQueryParam(key)
+  if (methoda) return methoda
+
+  const methodb = FlowRouter.current().queryParams
+  return methodb && methodb[key]
+}

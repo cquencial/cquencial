@@ -83,16 +83,23 @@ function add (route) {
   })
 }
 
+// -------------------------------------------
+// define
+
+const isRoute = def => {
+  if (!def) return false
+  check(def.path, String)
+  check(def.name, String)
+  check(def.label, String)
+  check(def.template, Function)
+  check(def.roles, Match.Maybe([String]))
+  check(def.group, Match.Maybe(String))
+  check(def.enter, Match.Maybe([Function]))
+  return true
+}
+
 function define (key, def) {
-  check(def, {
-    path: String,
-    name: String,
-    label: String,
-    template: Function,
-    roles: Match.Maybe([String]),
-    group: Match.Maybe(String),
-    enter: Match.Maybe([Function])
-  })
+  check(def, Match.Where(isRoute))
   const route = create(def)
   internal.instances[key] = add(route)
   internal[key] = route
@@ -100,6 +107,8 @@ function define (key, def) {
 
 Routes.define = define
 
+// -------------------------------------------
+// to
 Routes.to = new Proxy(internal, {
   get: function (obj, prop) {
     if (!obj[prop]) {

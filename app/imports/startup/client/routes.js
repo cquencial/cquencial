@@ -14,7 +14,12 @@ function toLogin () {
 
 function toRoot () {
   if (loggedIn()) {
-    Routes.to.root.go()
+    const redirect = Routes.queryParam('redirect')
+    if (redirect) {
+      Routes.go(global.decodeURIComponent(redirect))
+    } else {
+      Routes.to.root.go()
+    }
   }
 }
 
@@ -28,7 +33,7 @@ export const allRoutes = [
     label: 'Page not found',
     path: '*',
     template () {
-      return import('/imports/ui/pages/pageNotFound/pageNotFound.js')
+      import '/imports/ui/pages/pageNotFound/pageNotFound.js'
     },
     enter: [toLogin]
   },
@@ -37,60 +42,63 @@ export const allRoutes = [
     label: 'CQUENCIAL',
     path: '/',
     template () {
-      return import('/imports/ui/pages/root/root.js')
+      import '/imports/ui/pages/root/root.js'
     },
     enter: [toLogin],
     navigation: () => true,
-    target: Navigation.home,
+    target: Navigation.targets.home,
     icon: 'home'
-  },
-  {
-    name: 'login',
-    label: 'Login',
-    path: '/login',
-    template () {
-      return import('/imports/ui/pages/root/root.js')
-    },
-    enter: [toRoot],
-    navigation: loggedOut,
-    target: Navigation.right,
-  },
-  {
-    name: 'logout',
-    label: 'Logout',
-    path: '/logout',
-    template () {
-      return import('/imports/ui/pages/logout/logout.js')
-    },
-    enter: [toLogin],
-    navigation: loggedIn,
-    target: Navigation.right,
-  },
-  {
-    name: 'setup',
-    label: 'Setup Cquencial',
-    path: '/setup',
-    template () {
-      return import('/imports/ui/pages/setup/setup.js')
-    },
   },
   {
     name: 'settings',
     label: 'Settings',
     path: '/settings',
     template() {
-      return import('/imports/ui/pages/settings/settings.js')
+      import '/imports/ui/pages/settings/settings.js'
     },
+    enter: [toLogin],
     navigation: loggedIn,
     icon: 'wrench',
-    target: Navigation.right,
+    target: Navigation.targets.right,
+  },
+  {
+    name: 'login',
+    label: 'Login',
+    path: '/login',
+    icon: 'sign-in',
+    template () {
+      import '/imports/ui/pages/login/login.js'
+    },
+    enter: [toRoot],
+    navigation: loggedOut,
+    target: Navigation.targets.right,
+  },
+  {
+    name: 'logout',
+    label: 'Logout',
+    path: '/logout',
+    icon: 'sign-out',
+    template () {
+      import '/imports/ui/pages/logout/logout.js'
+    },
+    enter: [toLogin],
+    navigation: loggedIn,
+    target: Navigation.targets.right,
+  },
+  {
+    name: 'setup',
+    label: 'Setup Cquencial',
+    path: '/setup',
+    template () {
+      import '/imports/ui/pages/setup/setup.js'
+    },
   }
 ]
 
 
 allRoutes.forEach(route => Routes.define(route.name, route))
 
-const navRoutes = allRoutes.filter(route => !!route.navigation)
+const navRoutes = allRoutes.filter(route => typeof route.navigation === 'function')
 navRoutes.forEach(navRoute => Navigation.register(navRoute.target, navRoute))
 
 Meteor.startup(() => {

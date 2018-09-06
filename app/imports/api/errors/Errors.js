@@ -1,4 +1,3 @@
-
 const concat = x => `commonErrors.${x}`
 
 export const CommonErrors = {

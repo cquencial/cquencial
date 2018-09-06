@@ -1,5 +1,5 @@
-import { Meteor } from "meteor/meteor"
-import { check } from "meteor/check"
+import { Meteor } from 'meteor/meteor'
+import { check } from 'meteor/check'
 import Events from 'events'
 
 // BPMN
@@ -8,7 +8,6 @@ import camundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda'
 
 // API IMPORTS
 import { ServiceContext } from '../../context/ServiceContext'
-
 
 const EventEmitter = Events.EventEmitter
 

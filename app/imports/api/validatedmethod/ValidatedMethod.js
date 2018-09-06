@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { ValidatedMethod } from 'meteor/mdg:validated-method'
 
-import { hasUsers, isRegisteredUser, hasRole } from '../accounts/server/accountUtils'
+import { hasUsers, isRegisteredUser, hasRole } from '../accounts/accountUtils'
 import { CommonErrors } from '../errors/Errors'
 
 /**

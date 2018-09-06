@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { Bpmn } from 'meteor/cquencial:bpmn-engine'
-import { isRegisteredUser } from '../../accounts/server/accountUtils'
+import { isRegisteredUser } from '../../accounts/accountUtils'
 import { Cquencial } from '../../cquencial/Cquencial'
 
 const allExtensions = Bpmn.extensions.getAll()

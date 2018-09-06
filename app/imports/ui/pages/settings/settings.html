@@ -1,3 +1,25 @@
 <template name="settings">
-	<h1>Settings</h1>
+	<ul class="nav nav-tabs">
+        <li>
+            <a href="?section=general">General</a>
+        </li>
+        <li>
+            <a href="?section=accounts">Accounts</a>
+        </li>
+        <li>
+            <a href="?section=extensions">Extensions</a>
+        </li>
+    </ul>
+
+    {{#if current "general"}}
+        general settings
+    {{/if}}
+
+    {{#if current "accounts"}}
+        account settings
+    {{/if}}
+
+    {{#if current "extensions"}}
+        extensions settings
+    {{/if}}
 </template>

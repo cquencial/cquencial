@@ -1,6 +1,5 @@
 import { Bpmn } from 'meteor/cquencial:bpmn-engine'
 
-
 Bpmn.persistence.on()
 Bpmn.instances.on()
 Bpmn.history.on()

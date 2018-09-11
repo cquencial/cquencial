@@ -1,4 +1,4 @@
-import ValidatedMethod from '../../validatedmethod/ValidatedMethod'
+import ValidatedMethod from '../../validated/Method'
 import {Cquencial} from '../../cquencial/Cquencial'
 import {hasUsers} from './accountUtils'
 

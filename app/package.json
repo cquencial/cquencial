@@ -13,6 +13,7 @@
     "bpmn-js": "^0.27.6",
     "camunda-bpmn-moddle": "^2.0.0",
     "meteor-node-stubs": "^0.3.2",
+    "readline-sync": "^1.4.9",
     "simpl-schema": "^1.4.2"
   },
   "devDependencies": {

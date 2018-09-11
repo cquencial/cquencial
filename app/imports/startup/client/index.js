@@ -1,2 +1,2 @@
-import '../../ui/utils/templateHelpers'
 import './routes'
+import './extensions'

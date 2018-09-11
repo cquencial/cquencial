@@ -1,18 +1,77 @@
 import { Meteor } from 'meteor/meteor'
-import { ReactiveVar } from 'meteor/reactive-var'
+import { check, Match } from 'meteor/check'
 import { SubsCache } from 'meteor/ccorcos:subs-cache'
+
+// ////////////////////////////////////////////////////////////////////////////
+//
+// INTERNAL
+//
+// ////////////////////////////////////////////////////////////////////////////
+
+let _connection = Meteor.Connection
+let _subs = {}
+let _subsCache = null
+let _subsCacheTimeout = 50
+let _subsCacheMaxPubs = 50
+
+function createHandle (publicationName, opts, callbacks) {
+  const options = opts || {}
+  const _callbacks = callbacks || {
+    onStop (e) {
+      if (e) console.error(e)
+    }
+  }
+
+  const handle = _subsCache.subscribe(publicationName, options, _callbacks)
+  _subs[publicationName] = {handle, options}
+  return handle
+}
+
+// ////////////////////////////////////////////////////////////////////////////
+//
+// PUBLIC
+//
+// ////////////////////////////////////////////////////////////////////////////
 
 export const SubsManager = {
 
-  connection: null,
-
-  remotePubs: {},
-
-  remotePublication (pubName) {
-    return this.remotePubs[pubName]
+  connection: {
+    /**
+     * Sets the current connection. Default is Meteor.connection.
+     * Stops all subs, if any already running.
+     * You may use this method before subscribing to remote publications.
+     * @param connection A DDP remote connection or Meteor.Connection
+     */
+    set (connection) {
+      check(connection, Match.Where(c => !!c && !!c.subscribe))
+      SubsManager.each((name) => SubsManager.unsubscribe(name))
+      _connection = connection
+    },
+    /**
+     * Returns the current internally used connection.
+     * Returns either a Meter.Connection or DDP connection.
+     */
+    get () {
+      return _connection
+    }
   },
 
-  remotesLoaded: new ReactiveVar(false),
+  cache: {
+    setTimeout (value) {
+      check(value, Number)
+      _subsCacheTimeout = value
+    },
+    setLimit (value) {
+      check(value, Number)
+      _subsCacheMaxPubs = value
+    },
+    get () {
+      if (!_subsCache) {
+        _subsCache = new SubsCache(_subsCacheTimeout, _subsCacheMaxPubs, false)
+      }
+      return _subsCache
+    }
+  },
 
   // ////////////////////////////////////////////////////////////////
   //
@@ -20,113 +79,42 @@ export const SubsManager = {
   //
   // ////////////////////////////////////////////////////////////////
 
-  subs: {},
-
-  subsCache: null,
-
-  _users: {},
-
-  addUsers (userIds) {
-    if (!this._userSub) {
-      throw new Error('invalid call to addUsers, add first a subscription to a user publication to use this function')
-    }
-    let changed = false
-    userIds.forEach(userId => {
-      if (!this._users[userId]) {
-        this._users[userId] = true
-        changed = true
-      }
-    })
-    if (changed) {
-      // re-subscribe with new users array
-      const userIds = Object.keys(this._users)
-      return this.subscribe(this._userSub, {userIds})
-    } else {
-      return this.getSubscriptionHandle(this._userSub).handle
-    }
-  },
-
-  _userSub: null,
-
-  addUserSub (name, options) {
-    this._userSub = name
-    return this.subscribe(name, options)
-  },
-
-  getSubsCache () {
-    if (!this.subsCache) {
-      this.subsCache = new SubsCache(50, 50, false)
-    }
-    return this.subsCache
-  },
-
   subscribe (publicationName, options = {}) {
     if (!Meteor.isClient) throw new Meteor.Error(this.errors.EXECUTION_CLIENT_ONLY)
 
-    if (this.hasSubscribedTo(publicationName)) {
-      const existingSub = this.getSubscriptionHandle(publicationName)
+    if (this.has(publicationName)) {
+      const existingSub = this.handle(publicationName)
       if (JSON.stringify(existingSub.options) === JSON.stringify(options)) {
         return existingSub.handle
       }
     }
 
-    return this.createHandle(publicationName, options)
-  },
-
-  createHandle (publicationName, opts) {
-    const options = opts || {}
-    if (this.connection) {
-      options.remotesLoaded = this.remotesLoaded.get()
-      options.isRemote = this.remotePublication(publicationName)
-    }
-
-    const callbacks = {
-      onStop (e) {
-        if (e) {
-          console.error(e)
-          window.alertbox('danger', `${i18n.get(e.reason || e.message)} ${i18n.get(e.details || '')}`)
-        }
-      },
-    }
-
-    const handle = options.isRemote
-      ? this.connection.subscribe(publicationName, options)
-      : this.getSubsCache().subscribe(publicationName, options, callbacks)
-
-    this.subs[publicationName] = {
-      handle,
-      options,
-    }
-
-    return handle
+    return createHandle(publicationName, options)
   },
 
   unsubscribe (publicationName) {
-    if (!Meteor.isClient) {
-      throw new Meteor.Error(this.errors.EXECUTION_CLIENT_ONLY)
+    if (!this.has(publicationName)) {
+      return false
     }
-    if (!this.hasSubscribedTo(publicationName)) { return false }
 
-    const {handle} = this.getSubscriptionHandle(publicationName)
+    const {handle} = this.handle(publicationName)
     handle.stopNow()
-    delete this.subs[publicationName]
-
-    return !this.hasSubscribedTo(publicationName)
+    delete _subs[publicationName]
+    return !this.has(publicationName)
   },
 
-  stopAll () {
-    const allSubs = Object.values(this.subs)
-    for (const sub of allSubs) {
-      sub.handle.stop()
-    }
-    this.subs = {}
+  each (fct) {
+    Object.keys(_subs).forEach(publicationName => {
+      const handle = this.handle(publicationName)
+      fct.call(this, publicationName, handle)
+    })
   },
 
-  hasSubscribedTo (publicationName) {
-    return !!(this.subs[publicationName])
+  has (publicationName) {
+    return !!(_subs[publicationName])
   },
 
-  getSubscriptionHandle (publicationName) {
-    return this.subs[publicationName]
-  },
+  handle (publicationName) {
+    return _subs[publicationName]
+  }
 }

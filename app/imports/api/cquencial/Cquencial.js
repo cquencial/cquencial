@@ -22,6 +22,11 @@ to.methodName = function toMethodName (value) {
   return `cquencial.methods.${value}`
 }
 
+to.extMethodName = function toExtMethodName (extension, name) {
+  const suffix = `${extension.ref.ns}.${name}`
+  return to.methodName(suffix)
+}
+
 Cquencial.to = to
 
 const methods = {}

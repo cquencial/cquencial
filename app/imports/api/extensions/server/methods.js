@@ -1,22 +1,48 @@
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
-import Events from 'events'
-
-// BPMN
 import { Bpmn } from 'meteor/cquencial:bpmn-engine'
+import Events from 'events'
 import camundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda'
+import SimpleSchema from 'simpl-schema'
 
 // API IMPORTS
 import { ServiceContext } from '../../context/ServiceContext'
+import ValidatedMethod from '../../validatedmethod/ValidatedMethod'
+import { Cquencial } from '../../cquencial/Cquencial'
 
 const EventEmitter = Events.EventEmitter
 
-Meteor.methods({
-  // code to run on server at startup
-  'startProcess' ({source}) {
-    try {
-      console.log(source)
+// REGISTER EXTENSION METHODS
+const allExtensions = Bpmn.extensions.getAll()
+allExtensions.forEach(extension => {
+  const {methods} = extension.ref
 
+  Object.keys(methods).forEach(key => {
+    // register method here
+    const methodDef = methods[key]
+    const name = Cquencial.to.extMethodName(extension, methodDef.name)
+
+    let validate
+    if (methodDef.schema) {
+      const schema = new SimpleSchema(methodDef.schema)
+      validate = function validate (...args) {
+        schema.validate(...args)
+      }
+    } else {
+      validate = function validate () {
+        return void 0
+      }
+    }
+
+    const run = methodDef.run
+    const validatedMethod = new ValidatedMethod({name, validate, run})
+    console.info(`[method created] - ${validatedMethod.name}`)
+  })
+})
+
+Meteor.methods({
+  'startProcess' ({source, variables}) {
+    try {
       const engine = new Bpmn.Engine({
         source,
         moddleOptions: {
@@ -30,10 +56,6 @@ Meteor.methods({
         console.log(displayErr)
       })
 
-      listener.on('wait', (element, instance) => {
-        console.log(element.form)
-      })
-
       engine.on('error', (err, displayErr) => {
         console.error(err)
         console.log(displayErr)
@@ -42,13 +64,13 @@ Meteor.methods({
       engine.execute({
         userId: this.userId,
         listener,
-        variables: {
+        variables: Object.assign({}, {
           startedBy: this.userId
-        },
+        }, variables),
         services: ServiceContext
       }, (err) => { console.log(err) })
-    } catch (errrr) {
-      console.error(errrr)
+    } catch (startProcessException) {
+      console.error(startProcessException)
     }
   },
 

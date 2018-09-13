@@ -7,7 +7,7 @@ import SimpleSchema from 'simpl-schema'
 
 // API IMPORTS
 import { ServiceContext } from '../../context/ServiceContext'
-import ValidatedMethod from '../../validatedmethod/ValidatedMethod'
+import ValidatedMethod from '../../validated/Method'
 import { Cquencial } from '../../cquencial/Cquencial'
 
 const EventEmitter = Events.EventEmitter

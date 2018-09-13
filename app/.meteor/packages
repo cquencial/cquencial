@@ -49,26 +49,3 @@ cquencial:bpmn-persistence
 cquencial:bpmn-instances
 cquencial:bpmn-history
 cquencial:bpmn-tasklist
-
-# ======================================= #
-# UI / ROUTES
-# ======================================= #
-ostrio:flow-router-extra
-
-# ======================================= #
-# UI / FORMS
-# ======================================= #
-aldeed:autoform
-jkuester:autoform-bpmn@0.1.6
-
-# ======================================= #
-# UI / BLAZE / TEMPLATES
-# ======================================= #
-jkuester:template-states
-reactive-dict
-
-# ======================================= #
-# UI / STYLE
-# ======================================= #
-less
-fortawesome:fontawesome

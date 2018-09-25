@@ -1,0 +1,22 @@
+#viewer-target {
+	height: 600px;
+}
+
+#wait-container {
+	z-index: 999;
+}
+
+.taken-element .djs-visual > :nth-child(1) {
+	stroke: #00FF00 !important; /* color elements as green */
+	stroke-width: 4px;
+}
+
+.waiting-element:not(.djs-connection) .djs-visual > :nth-child(1) {
+	stroke: #0000FF !important; /* color elements as green */
+	stroke-width: 4px;
+}
+
+.completed-element:not(.djs-connection) .djs-visual > :nth-child(1) {
+	stroke: #00FF00 !important; /* color elements as green */
+	stroke-width: 4px;
+}

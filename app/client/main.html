@@ -1,7 +1,12 @@
 <head>
-	<title>cquencial</title>
+  <title>cquencial-ui</title>
 </head>
 
-<body>
-	<p>This app is server-side only. In order to configure your app via gui please use cquencial-ui.</p>
-</body>
+<template name="main">
+  <div class="container-fluid">
+    {{> nav}}
+    <div class="content-container">
+      {{> yield}}
+    </div>
+  </div>
+</template>

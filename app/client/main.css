@@ -1,10 +1,4 @@
-/* CSS declarations go here */
-
-table {
-	width: 100%;
-}
-
-td , th {
-	border-left :none;
-	border-right :none;
+body {
+  padding: 10px;
+  font-family: sans-serif;
 }

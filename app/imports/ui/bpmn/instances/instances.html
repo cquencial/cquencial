@@ -1,0 +1,28 @@
+<template name="instances">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4>Running Instances</h4>
+		</div>
+		<table class="table table-bordered table-striped">
+			<thead>
+			<tr>
+				<th>instanceId</th>
+				<th>actions</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{#each instances}}
+				<tr>
+					<td>
+						{{this.instanceId}}
+					</td>
+					<td>
+						<button class="btn btn-default stop-instance" data-instance="{{this.instanceId}}">Stop</button>
+						<button class="btn btn-default history" data-instance="{{this.instanceId}}">History</button>
+					</td>
+				</tr>
+			{{/each}}
+			</tbody>
+		</table>
+	</div>
+</template>

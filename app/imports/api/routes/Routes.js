@@ -4,8 +4,6 @@ import { Tracker } from 'meteor/tracker'
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra'
 import { check, Match } from 'meteor/check'
 
-import '../../ui/components/loading/loading.html'
-
 const isObj = x => x ? typeof x === 'object' && !typeof x === 'function' : true
 
 const internal = {}
@@ -64,7 +62,8 @@ function add (route) {
     triggersEnter: route.triggersEnter(),
     name: route.name,
     whileWaiting () {
-      this.render(route.target || Routes.defaultTarget, 'loading', {title: route.label})
+      import '../../ui/components/login/login'
+      this.render(route.target || Routes.defaultTarget, 'loginForm', {title: route.label})
     },
     waitOn () {
       return route.template()

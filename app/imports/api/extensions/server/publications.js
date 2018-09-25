@@ -20,3 +20,4 @@ allExtensions.forEach(extension => {
     return collection.find()
   })
 })
+

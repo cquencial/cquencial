@@ -1,4 +1,6 @@
 import { check } from 'meteor/check'
+import { Extensions } from '../extensions/Extensions'
+import { Routes } from '../routes/Routes'
 
 export const Cquencial = {}
 const internal = {}
@@ -37,3 +39,22 @@ methods.setupRequired = {
 }
 
 Cquencial.methods = methods
+
+const get = {}
+
+get.extensions = function getExtensions ({onlyActive = false}) {
+  return Extensions.collection.find({}).fetch()
+}
+
+get.route = function getRoute (value) {
+  if (!value) return '/undefined'
+  try {
+    const route = Routes.to[value]
+    return route.route()
+  } catch (e) {
+    console.error(e)
+    return '/undefined'
+  }
+}
+
+Cquencial.get = get

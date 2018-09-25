@@ -1,4 +1,24 @@
 <template name="root">
+    <div class="col">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Extensions
+            </div>
+            {{#with activeExtensions}}
+            <ul class="list-group">
+                {{#each this}}
+                    <li class="list-group-item">
+                        <a href="/{{this.path}}">{{this.label}}</a>
+                    </li>
+                {{/each}}
+            </ul>
+            {{else}}
+                <div class="jumbotron">
+                    <p>No extensions activated. Please go to <a href="{{route 'settings'}}">Settings</a> and activate.</p>
+                </div>
+            {{/with}}
+        </div>
+    </div>
     <!--
 	<div>
 		<button class="btn btn-sm btn-danger pull-right" id="delete-all-button">

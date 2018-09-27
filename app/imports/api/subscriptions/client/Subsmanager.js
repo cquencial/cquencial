@@ -14,6 +14,13 @@ let _subsCache = null
 let _subsCacheTimeout = 50
 let _subsCacheMaxPubs = 50
 
+function getCache () {
+  if (!_subsCache) {
+    _subsCache = new SubsCache(_subsCacheTimeout, _subsCacheMaxPubs, false)
+  }
+  return _subsCache
+}
+
 function createHandle (publicationName, opts, callbacks) {
   const options = opts || {}
   const _callbacks = callbacks || {
@@ -22,7 +29,7 @@ function createHandle (publicationName, opts, callbacks) {
     }
   }
 
-  const handle = _subsCache.subscribe(publicationName, options, _callbacks)
+  const handle = getCache().subscribe(publicationName, options, _callbacks)
   _subs[publicationName] = {handle, options}
   return handle
 }
@@ -65,12 +72,7 @@ export const SubsManager = {
       check(value, Number)
       _subsCacheMaxPubs = value
     },
-    get () {
-      if (!_subsCache) {
-        _subsCache = new SubsCache(_subsCacheTimeout, _subsCacheMaxPubs, false)
-      }
-      return _subsCache
-    }
+    get: getCache,
   },
 
   // ////////////////////////////////////////////////////////////////

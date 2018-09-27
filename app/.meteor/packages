@@ -67,6 +67,7 @@ jkuester:autoform-bpmn@0.1.6
 # ======================================= #
 jkuester:template-states
 reactive-dict
+ccorcos:subs-cache
 
 # ======================================= #
 # UI / STYLE

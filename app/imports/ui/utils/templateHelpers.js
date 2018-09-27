@@ -9,14 +9,22 @@ Template.registerHelper('print', function (obj) {
   return JSON.stringify(obj)
 })
 
-Template.registerHelper('log', function (obj) {
-  return console.log(obj)
+Template.registerHelper('log', function (...args) {
+  return console.log(...args)
 })
 
 Template.registerHelper('activeExtensions', function () {
-  return Cquencial.get.extensions({onlyActive: true})
+  return Cquencial.get.extensions({isActive: true})
+})
+
+Template.registerHelper('allExtensions', function () {
+  return Cquencial.get.extensions()
 })
 
 Template.registerHelper('route', function (value) {
   return Cquencial.get.route(value)
+})
+
+Template.registerHelper('fields', function (doc) {
+  return doc ? Object.keys(doc).map(key => ({key, value: doc[key]})) : []
 })

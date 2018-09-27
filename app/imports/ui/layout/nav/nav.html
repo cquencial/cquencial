@@ -12,14 +12,20 @@
             {{/with}}
             {{#if currentUser}}
                 {{#with leftEntries}}
-                    {{> navRoute route=this}}
+                    <ul class="nav navbar-nav">
+                        {{#each this}}
+                            {{#if showRoute this}}
+                                {{> navRoute data=this isActive=false}}
+                            {{/if}}
+                        {{/each}}
+                    </ul>
                 {{/with}}
 
                 {{#with rightEntries}}
                     <ul class="nav navbar-nav navbar-right">
                         {{#each this}}
                             {{#if showRoute this}}
-                                {{> navRoute route=this}}
+                                {{> navRoute data=this}}
                             {{/if}}
                         {{/each}}
                     </ul>
@@ -31,9 +37,9 @@
 
 <template name="navRoute">
     <li class="{{#if isActive}}active{{/if}}">
-        <a href="{{route.path}}" name="{{route.name}}" class="route-{{route.name}}">
-            {{#if route.icon}}<i class="fa fa-fw fa-{{route.icon}}"></i>{{/if}}
-            <span>{{route.label}}</span>
+        <a href="{{data.path}}" name="{{data.name}}" class="route-{{data.name}}">
+            {{#if data.icon}}<i class="fa fa-fw fa-{{data.icon}}"></i>{{/if}}
+            <span>{{data.label}}</span>
         </a>
     </li>
 </template>

@@ -1,6 +1,9 @@
 import { check } from 'meteor/check'
+import { Meteor } from 'meteor/meteor'
 import { Extensions } from '../extensions/Extensions'
 import { Routes } from '../routes/Routes'
+import { Bpmn } from 'meteor/cquencial:bpmn-engine'
+import { Tracker } from "meteor/tracker"
 
 export const Cquencial = {}
 const internal = {}
@@ -11,6 +14,15 @@ Cquencial.debug = function debug (value) {
   check(value, Boolean)
   internal._debug = value
 }
+
+const publications = {}
+
+publications.allExtensions = {
+  name: 'cquencial.publications.extensions.all',
+  schema: null
+}
+
+Cquencial.publications = publications
 
 const to = {}
 
@@ -29,6 +41,11 @@ to.extMethodName = function toExtMethodName (extension, name) {
   return to.methodName(suffix)
 }
 
+to.pathName = function toExtPathName (ns) {
+  const path = ns.replace(/\./g, '/').replace(/\s+/g, '')
+  return `/${path}`
+}
+
 Cquencial.to = to
 
 const methods = {}
@@ -42,8 +59,8 @@ Cquencial.methods = methods
 
 const get = {}
 
-get.extensions = function getExtensions ({onlyActive = false}) {
-  return Extensions.collection.find({}).fetch()
+get.extensions = function getExtensions (query = {}) {
+  return Extensions.collection.find(query).fetch()
 }
 
 get.route = function getRoute (value) {
@@ -58,3 +75,30 @@ get.route = function getRoute (value) {
 }
 
 Cquencial.get = get
+
+const is = {}
+
+is.active = function isActive (nameSpace) {
+  return Extensions.collection.findOne({ns: nameSpace, isActive: true})
+}
+
+Cquencial.is = is
+
+if (Meteor.isClient) {
+  import { SubsManager } from '../subscriptions/client/Subsmanager'
+  const globalSubs = {}
+
+  Meteor.startup(() => {
+
+    // subscribe
+    Tracker.autorun(() => {
+      const allExtensions = SubsManager.subscribe(publications.allExtensions.name)
+      globalSubs[publications.allExtensions.name] = allExtensions
+
+      if (allExtensions.ready()) {
+        console.log(`ready [${publications.allExtensions.name}]`)
+      }
+    })
+  })
+
+}

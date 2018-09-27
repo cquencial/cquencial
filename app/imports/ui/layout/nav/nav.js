@@ -16,13 +16,14 @@ Template.nav.helpers({
     return Navigation.getAll(Navigation.targets.home)
   },
   leftEntries () {
+    console.log(Navigation.getAll(Navigation.targets.left))
     return Navigation.getAll(Navigation.targets.left)
   },
   rightEntries () {
     return Navigation.getAll(Navigation.targets.right)
   },
   showRoute (route) {
-    return route.navigation()
+    return route.navigation.call(Template.instance())
   },
   notificationsCount () {
     return Notifications.find().count()

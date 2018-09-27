@@ -1,27 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { Routes } from '../../api/routes/Routes'
 import { Navigation } from '../../api/navigation/Navigation'
-import { Connection } from '../../api/connection/Connection'
-
-const loggedIn = () =>  Connection.userId()
-const loggedOut = () => !Connection.userId()
-
-function toLogin () {
-  if (loggedOut()) {
-    Routes.to.login.go({}, {redirect: global.encodeURIComponent(Routes.location())})
-  }
-}
-
-function toRoot () {
-  if (loggedIn()) {
-    const redirect = Routes.queryParam('redirect')
-    if (redirect) {
-      Routes.go(global.decodeURIComponent(redirect))
-    } else {
-      Routes.to.root.go()
-    }
-  }
-}
+import {loggedIn, loggedOut, toLogin, toRoot} from '../../ui/utils/routeTriggers'
 
 /**
  * This is the minimal set of route definitions
@@ -80,7 +60,6 @@ export const allRoutes = [
     template () {
       import '/imports/ui/pages/logout/logout.js'
     },
-    enter: [toLogin],
     navigation: loggedIn,
     target: Navigation.targets.right,
   },

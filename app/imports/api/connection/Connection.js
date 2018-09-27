@@ -3,11 +3,10 @@ import { Meteor } from 'meteor/meteor'
 
 let _connection = Meteor.connection
 
-console.log(Meteor)
 export const Connection = {
 
   set (url, callback) {
-    _connection = DDP.connect(url);
+    _connection = DDP.connect(url)
     console.log(_connection)
   },
 
@@ -20,7 +19,11 @@ export const Connection = {
   },
 
   userId () {
-    return _connection._userId
+    if (_connection === Meteor.connection) {
+      return Meteor.userId()
+    } else {
+      return _connection._userId
+    }
   },
 
   login (username, password, callback) {
@@ -31,6 +34,7 @@ export const Connection = {
         callback.call(this, error, null)
       }
     }
+
     if (_connection === Meteor.connection) {
       Meteor.loginWithPassword(username, password, _callback)
     } else {

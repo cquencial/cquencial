@@ -13,6 +13,7 @@ let _subs = {}
 let _subsCache = null
 let _subsCacheTimeout = 50
 let _subsCacheMaxPubs = 50
+let _debug = false
 
 function getCache () {
   if (!_subsCache) {
@@ -25,7 +26,7 @@ function createHandle (publicationName, opts, callbacks) {
   const options = opts || {}
   const _callbacks = callbacks || {
     onStop (e) {
-      if (e) console.error(e)
+      if (_debug && e) console.error(e)
     }
   }
 

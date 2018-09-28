@@ -9,10 +9,38 @@ import SimpleSchema from 'simpl-schema'
 import { ServiceContext } from '../../context/ServiceContext'
 import ValidatedMethod from '../../validated/Method'
 import { Cquencial } from '../../cquencial/Cquencial'
+import { CommonErrors } from '../../errors/Errors'
+import { Extensions } from '../Extensions'
 
 const EventEmitter = Events.EventEmitter
 
+// GLOBAL EXTENSION METHODS
+const updateExt = Cquencial.methods.update.extension
+const updateExtSchema = new SimpleSchema(updateExt.schema)
+export const updateExtension = new ValidatedMethod({
+  name: updateExt.name,
+  roles: updateExt.roles,
+  validate (args) {
+    updateExtSchema.validate(args)
+  },
+  run (args) {
+    const {docId} = args
+    const {key} = args
+    const {type} = args
+    const doc = Extensions.collection.findOne(docId)
+
+    switch (type) {
+      case updateExt.types.extension:
+        const {isActive} = doc
+        return Extensions.collection.update(docId, {$set: {isActive: !isActive}})
+      default:
+        throw new Meteor.Error(...CommonErrors.internalServerError(`type [${type}] is not recognized`))
+    }
+  }
+})
+
 // REGISTER EXTENSION METHODS
+const _allExtensionMethods = []
 const allExtensions = Bpmn.extensions.getAll()
 allExtensions.forEach(extension => {
   const {methods} = extension.ref
@@ -37,8 +65,10 @@ allExtensions.forEach(extension => {
     const run = methodDef.run
     const validatedMethod = new ValidatedMethod({name, validate, run})
     console.info(`[method created] - ${validatedMethod.name}`)
+    _allExtensionMethods.push(validatedMethod)
   })
 })
+export const allExtensionMethods = _allExtensionMethods
 
 Meteor.methods({
   'startProcess' ({source, variables}) {

@@ -12,11 +12,12 @@ const PermissionsMixin = function (options) {
   const runFct = options.run
   options.run = function run (...args) {
     const {userId} = this
-    const exception = options.permission && options.permission(...args)
+    const permission = options.permission && options.permission(...args)
 
-    // user permission
-    if (hasUsers() && !isRegisteredUser(userId)) {
-      if (!exception) throw new Meteor.Error(...CommonErrors.permissionDenied())
+    // user is not a registered user and there is no
+    // exeptional permission, throw a permission denied error
+    if (hasUsers() && !isRegisteredUser(userId) && !permission) {
+      throw new Meteor.Error(...CommonErrors.permissionDenied())
     }
 
     return runFct.call(this, ...args)
@@ -34,10 +35,10 @@ const RoleMixin = function (options) {
     const runFct = options.run
     options.run = function run (...args) {
       const {userId} = this
-      const {role} = options
+      const {roles} = options
 
       // CHECK ROLES
-      if (!hasRole(userId, role)) {
+      if (!hasRole(userId, roles)) {
         throw new Meteor.Error(...CommonErrors.permissionDenied())
       }
 

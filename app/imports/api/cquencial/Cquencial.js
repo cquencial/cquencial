@@ -3,7 +3,8 @@ import { Meteor } from 'meteor/meteor'
 import { Extensions } from '../extensions/Extensions'
 import { Routes } from '../routes/Routes'
 import { Bpmn } from 'meteor/cquencial:bpmn-engine'
-import { Tracker } from "meteor/tracker"
+import { Tracker } from 'meteor/tracker'
+import { ACL } from '../acl/ACL'
 
 export const Cquencial = {}
 const internal = {}
@@ -55,6 +56,27 @@ methods.setupRequired = {
   schema: null,
 }
 
+methods.update = {}
+methods.update.extension = {
+  name: 'cquencial.methods.update.extension',
+  schema: {
+    docId: String,
+    key: {
+      type:String,
+      optional: true,
+    },
+    type: String,
+  },
+  roles: [ACL.defaults.manageSettings],
+  group: ACL.defaults.groups.admins,
+  types: {
+    extension: 'extensions',
+    hooks: 'hooks',
+    methods: 'methods',
+    publications: 'publications'
+  }
+}
+
 Cquencial.methods = methods
 
 const get = {}
@@ -85,7 +107,10 @@ is.active = function isActive (nameSpace) {
 Cquencial.is = is
 
 if (Meteor.isClient) {
-  import { SubsManager } from '../subscriptions/client/Subsmanager'
+import
+  { SubsManager }
+  from
+  '../subscriptions/client/Subsmanager'
   const globalSubs = {}
 
   Meteor.startup(() => {

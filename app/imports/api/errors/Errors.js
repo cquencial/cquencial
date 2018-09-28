@@ -1,13 +1,17 @@
 const concat = x => `commonErrors.${x}`
 
 export const CommonErrors = {
-  permissionDenied () {
-    return [concat(this.name), 'commonErrors.permissionDeniedDescription']
+  permissionDenied (details) {
+    return [concat(this.name), concat(this.name + 'Description'), details]
+  },
+  internalServerError (details) {
+    return [concat(this.name), concat(this.name + 'Description'), details]
   }
 }
 
 CommonErrors.def = [
-  'permissionDenied'
+  'permissionDenied',
+  'internalServerError'
 ]
 
 CommonErrors.def.forEach(key => {

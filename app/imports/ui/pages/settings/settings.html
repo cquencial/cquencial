@@ -1,5 +1,5 @@
 <template name="settings">
-	<ul class="nav nav-tabs">
+    <ul class="nav nav-tabs">
         <li>
             <a href="?section=general">General</a>
         </li>
@@ -21,18 +21,19 @@
 
     {{#if current "extensions"}}
         {{#each allExtensions}}
-            {{log this}}
             <div class="panel panel-{{#if this.isActive}}success{{else}}default{{/if}}">
                 <div class="panel-heading clearfix">
 
                     <span class="pull-right">
                         {{#if this.isActive}}
-                            <button class="btn btn-warning btn-sm disable-button">
-                                Disable
+                            <button class="btn btn-success btn-sm toggle-button"
+                                    data-doc="{{this._id}}" data-type="extensions">
+                                Active
                             </button>
                         {{else}}
-                            <button class="btn btn-success btn-sm disable-button">
-                                Activate
+                            <button class="btn btn-default btn-sm toggle-button"
+                                    data-doc="{{this._id}}" data-type="extensions">
+                                Disabled
                             </button>
                         {{/if}}
                     </span>
@@ -50,48 +51,60 @@
                     <tr>
                         <td>Name</td>
                         <td>{{this.name}}</td>
+                        <td class="text-right"></td>
                     </tr>
                     <tr>
                         <td>Namespace</td>
                         <td>{{this.ns}}</td>
+                        <td class="text-right"></td>
                     </tr>
                     <tr>
                         <td>Description</td>
                         <td>{{this.description}}</td>
+                        <td class="text-right"></td>
                     </tr>
-                    <tr>
-                        <td><strong>Hooks</strong></td>
-                        <td></td>
-                    </tr>
-                    {{#each fields this.hooks}}
-                        <tr>
-                            <td>{{this.key}}</td>
-                            <td>{{this.value}}</td>
-                        </tr>
-                    {{/each}}
-                    <tr>
-                        <td><strong>Methods</strong></td>
-                        <td></td>
-                    </tr>
-                    {{#each fields this.methods}}
-                        <tr>
-                            <td>{{this.key}}</td>
-                            <td>{{this.value}}</td>
-                        </tr>
-                    {{/each}}
-                    <tr>
-                        <td><strong>Publications</strong></td>
-                        <td></td>
-                    </tr>
-                    {{#each fields this.publications}}
-                        <tr>
-                            <td>{{this.key}}</td>
-                            <td>{{this.value}}</td>
-                        </tr>
-                    {{/each}}
+                    {{> objectFields isActive=this.isActive
+                            object=this.hooks name="Hooks" type="hooks" docId=this._id }}
+
+                    {{> objectFields isActive=this.isActive
+                            object=this.methods name="Methods" type="methods" docId=this._id}}
+
+                    {{> objectFields isActive=this.isActive
+                            object=this.publications name="Publications" type="publications" docId=this._id}}
                     </tbody>
                 </table>
             </div>
         {{/each}}
     {{/if}}
+</template>
+
+<template name="objectFields">
+    <tr>
+        <td><strong>{{name}}</strong></td>
+        <td></td>
+        <td class="text-right"></td>
+    </tr>
+    {{#each fields object}}
+        <tr class="{{#unless ../../isActive}}text-muted{{/unless}}">
+            <td>{{this.key}}</td>
+            <td>{{this.value}}</td>
+            <td class="text-right">
+                {{#with this.value}}
+                    {{#if ../../isActive}}
+                        <button class="btn btn-success btn-sm toggle-button"
+                                data-doc="{{../../docId}}"
+                                data-target="{{../key}}" data-type="{{../../type}}">
+                            <i class="fa fa-fw fa-plug"></i>
+                        </button>
+                    {{else}}
+                        <button class="btn btn-default btn-sm toggle-button"
+                                data-doc="{{../../docId}}"
+                                data-target="{{../key}}" data-type="{{../../type}}">
+                            <i class="fa fa-fw fa-power-off"></i>
+                        </button>
+                    {{/if}}
+                {{/with}}
+            </td>
+        </tr>
+    {{/each}}
 </template>
